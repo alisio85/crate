@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["halt","panic_to_sink"]};

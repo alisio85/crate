@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["Status"],"trait":["IntoStatus","OptionIntoStatus"],"type":["KResult"]};

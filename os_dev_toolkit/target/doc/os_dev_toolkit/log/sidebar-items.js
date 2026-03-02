@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["Level"],"struct":["Logger","RingLog"],"trait":["LogSink"]};
