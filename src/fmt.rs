@@ -1,8 +1,27 @@
+//! Formatting helpers for diagnostics in `no_std` environments.
+//!
+//! The goal of this module is to provide deterministic, allocation-free formatting helpers that
+//! are frequently useful during OS development:
+//!
+//! - [`crate::fmt::HexSlice`] for stable, compact `Debug` printing of byte slices.
+//! - [`crate::fmt::hexdump_to_sink`] for a classic hex dump layout (offset/hex/ascii).
+//! - [`crate::fmt::ByteFmt`] for human-friendly binary unit formatting.
+//! - [`crate::fmt::Addr`] for consistent pointer/address formatting.
+
 use core::fmt;
 use core::fmt::Write;
 
 use crate::log::LogSink;
 
+/// Wrapper type providing a stable [`Debug`](core::fmt::Debug) representation for `&[u8]`.
+///
+/// This is intentionally compact and deterministic:
+///
+/// ```text
+/// [00 01 02 ff]
+/// ```
+///
+/// This is handy in kernel logs where `{:?}` output should be predictable.
 pub struct HexSlice<'a>(pub &'a [u8]);
 
 impl fmt::Debug for HexSlice<'_> {
@@ -18,6 +37,20 @@ impl fmt::Debug for HexSlice<'_> {
     }
 }
 
+/// Writes a classic hex dump to a [`LogSink`].
+///
+/// Each line is formatted as:
+///
+/// ```text
+/// 0x00000000: 01 02 03 ... |....|
+/// ```
+///
+/// - `bytes`: input data to render.
+/// - `sink`: output destination.
+/// - `columns`: number of bytes per line. If `0`, defaults to `16`.
+///
+/// This function is best-effort: it ignores formatting errors because the underlying sink is
+/// infallible by contract.
 pub fn hexdump_to_sink(bytes: &[u8], sink: &mut dyn LogSink, columns: usize) {
     let cols = if columns == 0 { 16 } else { columns };
 
@@ -68,6 +101,16 @@ pub fn hexdump_to_sink(bytes: &[u8], sink: &mut dyn LogSink, columns: usize) {
     }
 }
 
+/// Formats a byte count using binary units (KiB, MiB, GiB).
+///
+/// The output keeps three decimals for larger units and rounds down (truncation), which is often
+/// preferable in diagnostics.
+///
+/// Examples:
+///
+/// - `ByteFmt(999)` -> `"999 B"`
+/// - `ByteFmt(1024)` -> `"1.000 KiB"`
+/// - `ByteFmt(1024*1024)` -> `"1.000 MiB"`
 pub struct ByteFmt(pub u64);
 
 impl fmt::Display for ByteFmt {
@@ -89,6 +132,9 @@ impl fmt::Display for ByteFmt {
     }
 }
 
+/// Formats an address as lower-hex with `0x` prefix.
+///
+/// This is mainly a readability wrapper for kernel logs.
 pub struct Addr(pub usize);
 
 impl fmt::LowerHex for Addr {
