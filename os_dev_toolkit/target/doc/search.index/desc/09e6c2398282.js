@@ -1,0 +1,1 @@
+rd_("AjContains the success value00AhContains the error value00AoReturns the argument unchanged.00000000000000000000000000BaCalls <code>U::from(self)</code>.00000000000000000000000000BeA minimal sink for kernel/OS logging.00CbAssertion helpers intended for OS/kernel contexts.00")
