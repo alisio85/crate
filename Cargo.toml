@@ -1,10 +1,12 @@
 [package]
 name = "os_dev_toolkit"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2024"
 license = "MIT"
 description = "Dependency-free developer tooling primitives for Rust OS development (logging, diagnostics, fixed buffers, status codes)."
 repository = "https://github.com/alisio85/os_dev_toolkit"
+homepage = "https://github.com/alisio85/os_dev_toolkit"
+documentation = "https://github.com/alisio85/os_dev_toolkit/tree/main/docs"
 readme = "README.md"
 keywords = ["os", "kernel", "no-std", "logging", "diagnostics"]
 categories = ["no-std", "development-tools", "embedded"]
